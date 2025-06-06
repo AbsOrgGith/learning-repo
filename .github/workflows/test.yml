@@ -1,0 +1,34 @@
+name: Azure OIDC Deployment
+
+on:
+  push:
+    branches:
+      - main # Or the branch you configured in Azure federated credentials
+
+workflow_dispatch:
+
+permissions:
+  id-token: write # Required for OIDC authentication
+  contents: read  # Required for actions/checkout
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: production # Optional: If you use GitHub Environments
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Azure Login with OpenID Connect
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+      - name: Run az commands
+        run: |
+          echo "Logged into Azure successfully!"
+          az account show --output json
+          az group list --output table
