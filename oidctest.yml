@@ -5,6 +5,8 @@ on:
     branches:
       - main # Or the branch you configured in Azure federated credentials
 
+workflow_dispatch:
+
 permissions:
   id-token: write # Required for OIDC authentication
   contents: read  # Required for actions/checkout
@@ -25,7 +27,7 @@ jobs:
           tenant-id: ${{ secrets.AZURE_TENANT_ID }}
           subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
-      - name: Run Azure CLI command (example)
+      - name: Run az commands
         run: |
           echo "Logged into Azure successfully!"
           az account show --output json
